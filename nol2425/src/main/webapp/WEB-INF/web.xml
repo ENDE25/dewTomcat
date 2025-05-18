@@ -10,8 +10,10 @@
 <!--Servlets-->
 	<!--Login-->
 	<servlet>
+		<description></description>
+		<display-name>LoginServlet</display-name>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>com.ejemplo.servlets.LoginServlet</servlet-class>
+		<servlet-class>servlets.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
@@ -20,8 +22,10 @@
 
 	<!--Dashboard Alumno-->
 	<servlet>
+		<description></description>
+		<display-name>AlumnoDashboardServlet</display-name>
 		<servlet-name>AlumnoDashboardServlet</servlet-name>
-		<servlet-class>com.ejemplo.servlets.AlumnoDashboardServlet</servlet-class>
+		<servlet-class>servlets.AlumnoDashboardServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>AlumnoDashboardServlet</servlet-name>
@@ -30,18 +34,21 @@
 
 	<!--Dashboard Profesor-->
 	<servlet>
+		<description></description>
+		<display-name>ProfesorDashboardServlet</display-name>
 		<servlet-name>ProfesorDashboardServlet</servlet-name>
-		<servlet-class>com.ejemplo.servlets.ProfesorDashboardServlet</servlet-class>
+		<servlet-class>servlets.ProfesorDashboardServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfesorDashboardServlet</servlet-name>
 		<url-pattern>/profesor_dashboard</url-pattern>
 	</servlet-mapping>
 
+<!--Filtros-->
 	<!--Filtro de Logs-->
 	<filter>
 		<filter-name>LogFilter</filter-name>
-		<filter-class>com.ejemplo.filters.LogFilter</filter-class>
+		<filter-class>filters.LogFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LogFilter</filter-name>
