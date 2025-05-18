@@ -41,6 +41,10 @@
 
 <!--Filtros-->
 	<!--Filtro de Logs-->
+	<context-param>
+    	<param-name>logFilePath</param-name>
+    	<param-value>/tmp/nol2425.log</param-value> <!-- ruta log -->
+	</context-param>
 	<filter>
 		<filter-name>LogFilter</filter-name>
 		<filter-class>filters.LogFilter</filter-class>
