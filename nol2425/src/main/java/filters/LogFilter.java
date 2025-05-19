@@ -2,6 +2,8 @@ package filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.*;
 import java.time.LocalDateTime;
 
@@ -22,8 +24,59 @@ public class LogFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpSession session = httpRequest.getSession(false);
 
-        String usuario = (httpRequest.getRemoteUser() != null) ? httpRequest.getRemoteUser() : "anonimo";
+        String usuario = "anonimo";
+
+        if (session != null &&
+            session.getAttribute("dni") != null &&
+            session.getAttribute("key") != null &&
+            session.getAttribute("cookieCentro") != null) {
+
+            String dni = (String) session.getAttribute("dni");
+            String key = (String) session.getAttribute("key");
+            String cookie = (String) session.getAttribute("cookieCentro");
+
+            String url = "http://localhost:9090/CentroEducativo/alumnos/" + dni + "?key=" + key;
+
+            String[] command = {
+                "curl",
+                "-X", "GET",
+                url,
+                "-H", "accept: application/json",
+                "-H", "Cookie: " + cookie
+            };
+
+            StringBuilder jsonResult = new StringBuilder();
+            try {
+                ProcessBuilder pb = new ProcessBuilder(command);
+                Process process = pb.start();
+
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        jsonResult.append(line);
+                    }
+                }
+
+                process.waitFor();
+                String json = jsonResult.toString();
+
+                int nombreIndex = json.indexOf("\"nombre\":\"");
+                if (nombreIndex != -1) {
+                    int start = nombreIndex + 10;
+                    int end = json.indexOf("\"", start);
+                    if (end > start) {
+                        String nombre = json.substring(start, end);
+                        usuario = nombre;
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         String ip = request.getRemoteAddr();
         String uri = httpRequest.getRequestURI();
         String metodo = httpRequest.getMethod();
@@ -41,3 +94,4 @@ public class LogFilter implements Filter {
     @Override
     public void destroy() {}
 }
+
