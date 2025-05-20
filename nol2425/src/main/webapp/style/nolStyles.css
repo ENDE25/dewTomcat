@@ -1,0 +1,19 @@
+body {
+  background-color: #f8f9fa; /* Color de fondo suave */
+}
+header {
+  background-color: #007bff; /* Color de encabezado */
+  color: white;
+}
+.card {
+  transition: transform 0.2s; /* Efecto de hover */
+}
+.card:hover {
+  transform: scale(1.05); /* Aumentar tamaño al pasar el ratón */
+}
+footer {
+  background-color: #343a40; /* Color de pie de página */
+  color: white;
+}
+
+
