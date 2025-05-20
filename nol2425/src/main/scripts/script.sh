@@ -37,3 +37,25 @@ for alumno in "${alumnos[@]}"; do
 done
 
 echo " Todos los alumnos fueron añadidos."
+
+profesores=(
+    "222345666,Marc,Gómez Valls"
+    "333666333,Carlos,Contreras"
+    "444123444,Mario,Rodriguez"
+    "555666555,Alejandro,López"
+    "666555666,Adrian,Gonzalez"
+)
+
+for profesor in "${profesores[@]}"; do
+    IFS=',' read -r dni nombre apellidos <<< "$profesor"
+
+    echo " Añadiendo profesor $nombre $apellidos ($dni)..."
+
+    curl -s -b admin_cookie.txt \
+        -X POST "http://localhost:9090/CentroEducativo/profesores?key=$KEY" \
+        -H "accept: text/plain" \
+        -H "Content-Type: application/json" \
+        -d "{\"apellidos\": \"$apellidos\", \"dni\": \"$dni\", \"nombre\": \"$nombre\", \"password\": \"123456\"}"
+done
+
+echo " Todos los profesores fueron añadidos."
