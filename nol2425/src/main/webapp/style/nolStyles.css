@@ -8,7 +8,7 @@ header {
 .card {
   transition: transform 0.2s; /* Efecto de hover */
 }
-.card:hover {
+.card.ini:hover {
   transform: scale(1.05); /* Aumentar tamaño al pasar el ratón */
 }
 footer {
