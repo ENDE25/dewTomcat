@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/AlumnoDashboardServlet")
 public class AlumnoDashboardServlet extends HttpServlet {
@@ -57,11 +59,53 @@ public class AlumnoDashboardServlet extends HttpServlet {
             return;
         }
 
-        response.setContentType("text/html;charset=UTF-8");
+        // Parse manual JSON plano: [{"asignatura":"DCU","nota":"8.5"},...]
+        String json = resultado.toString().trim();
+        if (json.startsWith("[") && json.endsWith("]")) {
+            json = json.substring(1, json.length() - 1); // sin corchetes
+        }
+
+        String[] items = json.split("\\},\\{");
+
+        Map<String, String> asignaturasNotas = new HashMap<>();
+
+        for (String item : items) {
+            item = item.replace("{", "").replace("}", "");
+
+            String[] partes = item.split(",");
+            String asignatura = "";
+            String nota = "";
+
+            for (String parte : partes) {
+                String[] keyValue = parte.split(":");
+                if (keyValue.length == 2) {
+                    String clave = keyValue[0].replaceAll("\"", "").trim();
+                    String valor = keyValue[1].replaceAll("\"", "").trim();
+
+                    if (clave.equals("asignatura")) {
+                        asignatura = valor;
+                    } else if (clave.equals("nota")) {
+                        nota = valor;
+                    }
+                }
+            }
+
+            if (!asignatura.isEmpty()) {
+                asignaturasNotas.put(asignatura, nota);
+            }
+        }
+
+        // Devolver JSON a partir del Map
+        response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        out.println("<h2>Asignaturas del alumno:</h2>");
-        out.println("<pre>" + resultado.toString() + "</pre>");
+
+        out.print("{\"asignaturas\":[");
+        boolean primero = true;
+        for (Map.Entry<String, String> entry : asignaturasNotas.entrySet()) {
+            if (!primero) out.print(",");
+            primero = false;
+            out.print("{\"nombre\":\"" + entry.getKey() + "\",\"nota\":\"" + entry.getValue() + "\"}");
+        }
+        out.print("]}");
     }
 }
-
-

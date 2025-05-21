@@ -18,6 +18,38 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="style/nolStyles.css" rel="stylesheet" >
 </head>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("AlumnoDashboardServlet")
+    .then(res => res.json())
+    .then(data => {
+      const contenedor = document.getElementById("lista-asignaturas");
+
+      data.asignaturas.forEach(asig => {
+    	 console.log("Asignatura recibida:", asig);
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+        const enlace = document.createElement("a");
+        enlace.href = `asignaturaDetalleServlet?acronimo=${asig.nombre}`; // o `detalle_asignatura.jsp?acronimo=${asig.nombre}`
+        enlace.textContent = asig.nombre;
+        enlace.style.textDecoration = "none";
+        enlace.style.color = "inherit";
+
+        const badge = document.createElement("span");
+        badge.className = "badge bg-primary rounded-pill";
+        badge.textContent = asig.nota === "" ? "Sin calificar" : asig.nota;
+
+        li.appendChild(enlace);
+        li.appendChild(badge);
+        contenedor.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("Error cargando asignaturas:", err);
+    });
+});
+</script>
 
 <body class="d-flex flex-column min-vh-100">
 
@@ -39,7 +71,10 @@
             <h6 class="card-subtitle mb-2 text-muted">Tus Asignaturas</h6>
 
             <!-- Aquí se muestran dinámicamente las asignaturas -->
-            <iframe src="AlumnoDashboardServlet" width="100%" height="200px" style="border:none;"></iframe>
+            <!-- <iframe src="AlumnoDashboardServlet" width="100%" height="200px" style="border:none;"></iframe> -->
+            <div id="lista-asignaturas" class="list-group mt-3">
+  				<!-- Aquí se insertan las asignaturas -->
+			</div>
 
             <div class="mt-3">
               <a href="login_alumno.html" class="btn btn-secondary">Cerrar Sesión</a>

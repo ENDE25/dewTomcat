@@ -28,7 +28,17 @@
 		<servlet-name>AlumnoDashboardServlet</servlet-name>
 		<url-pattern>/alumno_dashboard</url-pattern>
 	</servlet-mapping>
-
+	
+	<!--Detalle Asignatura-->
+    <servlet>
+        <servlet-name>AsignaturaDetalleServlet</servlet-name>
+        <servlet-class>servlets.AsignaturaDetalleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AsignaturaDetalleServlet</servlet-name>
+        <url-pattern>/asignaturaDetalleServlet</url-pattern>
+    </servlet-mapping>
+    
 	<!--Dashboard Profesor-->
 	<servlet>
 		<servlet-name>ProfesorDashboardServlet</servlet-name>
