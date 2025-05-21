@@ -18,38 +18,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="style/nolStyles.css" rel="stylesheet" >
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("AlumnoDashboardServlet")
-    .then(res => res.json())
-    .then(data => {
-      const contenedor = document.getElementById("lista-asignaturas");
-
-      data.asignaturas.forEach(asig => {
-    	 console.log("Asignatura recibida:", asig);
-        const li = document.createElement("li");
-        li.className = "list-group-item d-flex justify-content-between align-items-center";
-
-        const enlace = document.createElement("a");
-        enlace.href = `asignaturaDetalleServlet?acronimo=${asig.nombre}`; // o `detalle_asignatura.jsp?acronimo=${asig.nombre}`
-        enlace.textContent = asig.nombre;
-        enlace.style.textDecoration = "none";
-        enlace.style.color = "inherit";
-
-        const badge = document.createElement("span");
-        badge.className = "badge bg-primary rounded-pill";
-        badge.textContent = asig.nota === "" ? "Sin calificar" : asig.nota;
-
-        li.appendChild(enlace);
-        li.appendChild(badge);
-        contenedor.appendChild(li);
-      });
-    })
-    .catch(err => {
-      console.error("Error cargando asignaturas:", err);
-    });
-});
-</script>
 
 <body class="d-flex flex-column min-vh-100">
 
@@ -91,7 +59,38 @@ document.addEventListener("DOMContentLoaded", () => {
       <small class="text-muted">Grupo G1: Ethan Arroyo, Feran Catalán, Pablo Rodríguez, Sergi Beneyto, Carles Hervás</small>
     </div>
   </footer>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("AlumnoDashboardServlet")
+    .then(res => res.json())
+    .then(data => {
+      const contenedor = document.getElementById("lista-asignaturas");
 
+      data.asignaturas.forEach(asig => {
+    	 console.log("Asignatura recibida:", asig);
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+        const enlace = document.createElement("a");
+        enlace.href = "asignaturaDetalleServlet?acronimo=" + encodeURIComponent(asig.nombre); // o `detalle_asignatura.jsp?acronimo=${asig.nombre}`
+        enlace.textContent = asig.nombre;
+        enlace.style.textDecoration = "none";
+        enlace.style.color = "inherit";
+
+        const badge = document.createElement("span");
+        badge.className = "badge bg-primary rounded-pill";
+        badge.textContent = encodeURIComponent(asig.nota) === "" ? "Sin calificar" : encodeURIComponent(asig.nota);
+
+        li.appendChild(enlace);
+        li.appendChild(badge);
+        contenedor.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("Error cargando asignaturas:", err);
+    });
+});
+</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
