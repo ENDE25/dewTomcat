@@ -59,3 +59,24 @@ for profesor in "${profesores[@]}"; do
 done
 
 echo " Todos los profesores fueron añadidos."
+
+asignaturas=(
+    "ISW,A, Ingenieria de Software"
+    "IPC,B,Interfaces Persona Computador"
+    "MAD,A,Matematica Discreta"
+    "DEW,B,Desarrollo Web"
+)
+
+for asignatura in "${asignaturas[@]}"; do
+    IFS=',' read -r acronimo cuatrimestre nombre <<< "$asignatura"
+
+    echo " Añadiendo asignatura $nombre $cuatrimestre ($acronimo)..."
+
+    curl -s -b admin_cookie.txt \
+        -X POST "http://localhost:9090/CentroEducativo/asignatura?key=$KEY" \
+        -H "accept: text/plain" \
+        -H "Content-Type: application/json" \
+        -d "{  \"acronimo\": \"$acronimo\",  \"creditos\": 0,  \"cuatrimestre\": \"$cuatrimestre\",  \"curso\": 0,  \"nombre\": \"$nombre\"}"
+done
+
+echo " Todas las asignaturas fueron añadidos."
