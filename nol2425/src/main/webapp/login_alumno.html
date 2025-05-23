@@ -25,17 +25,22 @@
       <div class="col-md-4">
         <div class="card shadow">
           <div class="card-body">
-            <form action="LoginServlet" method="post"> <!-- Cambiar a servlet si es necesario -->
-              <div class="mb-3">
-                <label for="dni" class="form-label">DNI</label>
-                <input type="text" class="form-control" id="dni" name="dni" required>
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-            </form>
+     
+			<form action="LoginServlet" method="post">
+			  <div class="mb-3">
+			    <label for="dni" class="form-label">DNI</label>
+			    <input type="text" class="form-control" id="dni" name="dni" required>
+			  </div>
+			  <div class="mb-3">
+			    <label for="password" class="form-label">Contraseña</label>
+			    <input type="password" class="form-control" id="password" name="password" required>
+			  </div>
+			  <div class="d-flex justify-content-between">
+			    <a href="index.html" class="btn btn-secondary">Volver</a>
+			    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+			  </div>
+			</form>
+
           </div>
         </div>
       </div>
