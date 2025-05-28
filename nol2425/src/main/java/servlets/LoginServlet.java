@@ -71,7 +71,7 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("cookieCentro", cookie);
         session.setAttribute("rol", "rolalu");
 
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("alumno_dashboard.jsp");
     }
 
     private boolean esAlumno(String dni, String key, String cookie) {

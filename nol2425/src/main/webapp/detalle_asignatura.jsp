@@ -44,7 +44,7 @@
             <p class="card-text"><strong>Nombre:</strong> <%= nombre %></p>
             <p class="card-text"><strong>Curso:</strong> <%= curso %></p>
             <p class="card-text"><strong>Créditos:</strong> <%= creditos %></p>
-            <a href="index.jsp" class="btn btn-primary mt-3">Volver al Dashboard</a>
+            <a href="alumno_dashboard.jsp" class="btn btn-primary mt-3">Volver al Dashboard</a>
           </div>
         </div>
       </div>
