@@ -9,15 +9,26 @@
   	</welcome-file-list>
 
 <!--Servlets-->
-	<!--Login-->
+	<!--Login Alumno-->
 	<servlet>
-		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>servlets.LoginServlet</servlet-class>
+		<servlet-name>AlumnoLoginServlet</servlet-name>
+		<servlet-class>servlets.AlumnoLoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>LoginServlet</servlet-name>
-		<url-pattern>/login</url-pattern>
+		<servlet-name>AlumnoLoginServlet</servlet-name>
+		<url-pattern>/AlumnoLoginServlet</url-pattern>
 	</servlet-mapping>
+
+<!--Login Profesor-->
+	<servlet>
+		<servlet-name>ProfesorLoginServlet</servlet-name>
+		<servlet-class>servlets.ProfesorLoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfesorLoginServlet</servlet-name>
+		<url-pattern>/ProfesorLoginServlet</url-pattern>
+	</servlet-mapping>
+
 
 	<!--Dashboard Alumno-->
 	<servlet>
@@ -26,7 +37,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>AlumnoDashboardServlet</servlet-name>
-		<url-pattern>/alumno_dashboard</url-pattern>
+		<url-pattern>/AlumnoDashboardServlet</url-pattern>
 	</servlet-mapping>
 	
 	<!--Detalle Asignatura-->
@@ -36,7 +47,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AsignaturaDetalleServlet</servlet-name>
-        <url-pattern>/asignaturaDetalleServlet</url-pattern>
+        <url-pattern>/AsignaturaDetalleServlet</url-pattern>
     </servlet-mapping>
     
 	<!--Dashboard Profesor-->
@@ -46,7 +57,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfesorDashboardServlet</servlet-name>
-		<url-pattern>/profesor_dashboard</url-pattern>
+		<url-pattern>/ProfesorDashBoardServlet</url-pattern>
 	</servlet-mapping>
 
 <!--Filtros-->

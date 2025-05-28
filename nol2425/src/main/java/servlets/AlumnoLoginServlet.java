@@ -7,8 +7,7 @@ import jakarta.servlet.http.*;
 import java.io.*;
 import java.net.*;
 
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+public class AlumnoLoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

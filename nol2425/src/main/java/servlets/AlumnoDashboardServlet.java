@@ -8,7 +8,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/AlumnoDashboardServlet")
 public class AlumnoDashboardServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
