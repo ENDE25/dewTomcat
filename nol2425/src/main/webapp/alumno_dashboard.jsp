@@ -59,7 +59,7 @@
       <small class="text-muted">Grupo G1: Ethan Arroyo, Feran Catalán, Pablo Rodríguez, Sergi Beneyto, Carles Hervás</small>
     </div>
   </footer>
-<script>
+ <script>
 document.addEventListener("DOMContentLoaded", () => {
   fetch("AlumnoDashboardServlet")
     .then(res => res.json())
@@ -67,23 +67,23 @@ document.addEventListener("DOMContentLoaded", () => {
       const contenedor = document.getElementById("lista-asignaturas");
 
       data.asignaturas.forEach(asig => {
-    	 console.log("Asignatura recibida:", asig);
-        const li = document.createElement("li");
-        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        console.log("Asignatura recibida:", asig);
 
-        const enlace = document.createElement("a");
-        enlace.href = "asignaturaDetalleServlet?acronimo=" + encodeURIComponent(asig.nombre); // o `detalle_asignatura.jsp?acronimo=${asig.nombre}`
-        enlace.textContent = asig.nombre;
-        enlace.style.textDecoration = "none";
-        enlace.style.color = "inherit";
+        const div = document.createElement("div");
+        div.className = "d-flex justify-content-between align-items-center mb-2";
+
+        const boton = document.createElement("a");
+        boton.href = "asignaturaDetalleServlet?acronimo=" + encodeURIComponent(asig.acronimo);
+        boton.className = "btn btn-outline-primary flex-grow-1 me-2 text-start";
+        boton.textContent = asig.nombre;
 
         const badge = document.createElement("span");
-        badge.className = "badge bg-primary rounded-pill";
-        badge.textContent = encodeURIComponent(asig.nota) === "" ? "Sin calificar" : encodeURIComponent(asig.nota);
+        badge.className = "badge bg-primary align-self-center";
+        badge.textContent = asig.nota || "Sin calificar";
 
-        li.appendChild(enlace);
-        li.appendChild(badge);
-        contenedor.appendChild(li);
+        div.appendChild(boton);
+        div.appendChild(badge);
+        contenedor.appendChild(div);
       });
     })
     .catch(err => {
@@ -94,3 +94,4 @@ document.addEventListener("DOMContentLoaded", () => {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
