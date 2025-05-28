@@ -64,50 +64,8 @@
       <small class="text-muted">Grupo G1: Ethan Arroyo, Feran Catalán, Pablo Rodríguez, Sergi Beneyto, Carles Hervás</small>
     </div>
   </footer>
-<<<<<<< HEAD
-=======
- <script>
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("AlumnoDashboardServlet")
-    .then(res => res.json())
-    .then(data => {
-      const contenedor = document.getElementById("lista-asignaturas");
->>>>>>> branch 'main' of https://github.com/ENDE25/dewTomcat.git
 
-<<<<<<< HEAD
-=======
-      data.asignaturas.forEach(asig => {
-        console.log("Asignatura recibida:", asig);
-
-        const div = document.createElement("div");
-        div.className = "d-flex justify-content-between align-items-center mb-2";
-
-        const boton = document.createElement("a");
-        boton.href = "asignaturaDetalleServlet?acronimo=" + encodeURIComponent(asig.acronimo);
-        boton.className = "btn btn-outline-primary flex-grow-1 me-2 text-start";
-        boton.textContent = asig.nombre;
-
-        const badge = document.createElement("span");
-        badge.className = "badge bg-primary align-self-center";
-        badge.textContent = asig.nota || "Sin calificar";
-
-        div.appendChild(boton);
-        div.appendChild(badge);
-        contenedor.appendChild(div);
-      });
-    })
-    .catch(err => {
-      console.error("Error cargando asignaturas:", err);
-    });
-});
-</script>
->>>>>>> branch 'main' of https://github.com/ENDE25/dewTomcat.git
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/alumno_dashboard.js"></script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
-
->>>>>>> branch 'main' of https://github.com/ENDE25/dewTomcat.git
