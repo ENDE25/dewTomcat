@@ -13,7 +13,7 @@ echo " Key obtenida: $KEY"
 echo " Cookie guardada en admin_cookie.txt"
 
 # Paso 2: Crear varios alumnos
-echo " Añadiendo alumnos de prueba..."
+echo " Añadiendo alumnos ..."
 
 # Array de alumnos: "dni,nombre,apellidos"
 alumnos=(
@@ -64,7 +64,7 @@ asignaturas=(
     "ISW,A, Ingenieria de Software"
     "IPC,B,Interfaces Persona Computador"
     "MAD,A,Matematica Discreta"
-    "DEW,B,Desarrollo Web"
+    "AMA,B,Analisis Matematico"
 )
 
 for asignatura in "${asignaturas[@]}"; do
@@ -73,10 +73,33 @@ for asignatura in "${asignaturas[@]}"; do
     echo " Añadiendo asignatura $nombre $cuatrimestre ($acronimo)..."
 
     curl -s -b admin_cookie.txt \
-        -X POST "http://localhost:9090/CentroEducativo/asignatura?key=$KEY" \
-        -H "accept: text/plain" \
+        -X POST "http://localhost:9090/CentroEducativo/asignaturas?key=$KEY" \
         -H "Content-Type: application/json" \
-        -d "{  \"acronimo\": \"$acronimo\",  \"creditos\": 0,  \"cuatrimestre\": \"$cuatrimestre\",  \"curso\": 0,  \"nombre\": \"$nombre\"}"
+        -d "{  \"acronimo\": \"$acronimo\",  \"creditos\": 4.5,  \"cuatrimestre\": \"$cuatrimestre\",  \"curso\": 3,  \"nombre\": \"$nombre\"}"
 done
 
 echo " Todas las asignaturas fueron añadidos."
+
+acronimos=(
+    "ISW"
+    "IPC"
+    "MAD"
+    "AMA"
+    "DEW"
+)
+
+dni_alumnos=(222222222 333333333 444444444 555555555 666666666)
+
+for acronimo in "${acronimos[@]}"; do
+    echo "Añadiendo alumnos a asignatura $acronimo..."
+
+    for dni in "${dni_alumnos[@]}"; do
+        echo "  - Añadiendo alumno con DNI $dni a $acronimo..."
+
+        curl -s -b admin_cookie.txt \
+            -X POST "http://localhost:9090/CentroEducativo/alumnos/$dni/asignaturas?key=$KEY" \
+            -H "accept: text/plain" \
+            -H "Content-Type: application/json" \
+            -d "$acronimo"
+    done
+done
