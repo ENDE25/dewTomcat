@@ -22,7 +22,7 @@ public class AlumnoDashboardServlet extends HttpServlet {
         String dni = (String) session.getAttribute("dni");
         String key = (String) session.getAttribute("key");
         String cookie = (String) session.getAttribute("cookieCentro");
-
+        
         String url = "http://localhost:9090/CentroEducativo/alumnos/" + dni + "/asignaturas?key=" + key;
 
         String[] command = {

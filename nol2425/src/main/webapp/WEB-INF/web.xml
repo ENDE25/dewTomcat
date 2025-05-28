@@ -57,7 +57,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ProfesorDashboardServlet</servlet-name>
-		<url-pattern>/ProfesorDashBoardServlet</url-pattern>
+		<url-pattern>/ProfesorDashboardServlet</url-pattern>
 	</servlet-mapping>
 
 <!--Filtros-->
