@@ -69,6 +69,10 @@ public class LogFilter implements Filter {
                     if (end > start) {
                         String nombre = json.substring(start, end);
                         usuario = nombre;
+                        
+                        
+                        //añadido por pablo
+                        session.setAttribute("nombreAlumno", nombre);
                     }
                 }
 
