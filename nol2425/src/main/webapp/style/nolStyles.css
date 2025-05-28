@@ -1,8 +1,8 @@
 body {
-  background-color: #f8f9fa; /* Color de fondo suave */
+  background-color: #f8f9fa;
 }
 header {
-  background-color: #007bff; /* Color de encabezado */
+  background-color: #007bff;
   color: white;
 }
 .card {
@@ -12,6 +12,6 @@ header {
   transform: scale(1.05); /* Aumentar tamaño al pasar el ratón */
 }
 footer {
-  background-color: #343a40; /* Color de pie de página */
+  background-color: #343a40; /* Color pie de página */
   color: white;
 }
