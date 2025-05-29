@@ -59,6 +59,16 @@
 		<servlet-name>ProfesorDashboardServlet</servlet-name>
 		<url-pattern>/ProfesorDashboardServlet</url-pattern>
 	</servlet-mapping>
+	
+	<!--Asignatura Alumnos-->
+	<servlet>
+		<servlet-name>AsignaturaAlumnosServlet</servlet-name>
+		<servlet-class>servlets.AsignaturaAlumnosServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AsignaturaAlumnosServlet</servlet-name>
+		<url-pattern>/AsignaturaAlumnosServlet</url-pattern>
+	</servlet-mapping>
 
 <!--Filtros-->
 	<!--Filtro de Logs-->

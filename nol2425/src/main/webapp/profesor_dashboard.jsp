@@ -63,52 +63,65 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", () => {
-	  fetch("ProfesorDashboardServlet")   //petición al servlet
-	    .then(res => res.json())        //lo meto en un json
-	    .then(data => {                 //esto se ejecuta una vez metida la respuesta en el json
-	      const tabContainer = document.getElementById("asignaturas-tabs");     //lista ul para las asignaturas
-	      const contentContainer = document.getElementById("asignaturas-content");    //contenedor para cada una
-	      
+	  fetch("ProfesorDashboardServlet")
+	    .then(res => res.json())
+	    .then(data => {
+	      const tabContainer = document.getElementById("asignaturas-tabs");
+	      const contentContainer = document.getElementById("asignaturas-content");
+
 	      // Limpiar contenedores
 	      tabContainer.innerHTML = '';
 	      contentContainer.innerHTML = '';
-	      
-	      // Crear pestañas y contenido
-	      data.asignaturas.forEach((asig, index) => {      //para cada asignatura ...
-	        // Crear pestaña (solo con el acrónimo)
-	        const tabItem = document.createElement("li");     //crear un item de la lista de pestañas por asignatura
+
+	      data.asignaturas.forEach((asig, index) => {
+	        const acronimo = asig.acronimo;
+
+	        // Crear pestaña
+	        const tabItem = document.createElement("li");
 	        tabItem.className = "nav-item";
 	        tabItem.role = "presentation";
-	        
-	        const tabButton = document.createElement("button");   //botón para entrar en esa asignatura
+
+	        const tabButton = document.createElement("button");
 	        tabButton.className = "nav-link" + (index === 0 ? " active" : "");
-	        tabButton.id = `tab-${asig.nombre}`;
+	        tabButton.id = `tab-${acronimo}`;
 	        tabButton.setAttribute("data-bs-toggle", "tab");
-	        tabButton.setAttribute("data-bs-target", `#content-${asig.nombre}`);
+	        tabButton.setAttribute("data-bs-target", `#content-${acronimo}`);
 	        tabButton.type = "button";
 	        tabButton.role = "tab";
-	        tabButton.textContent = asig.nombre; // Solo el acrónimo aquí
-	        
-	        tabItem.appendChild(tabButton);       //meter el botón en la pestaña
-	        tabContainer.appendChild(tabItem);    //meter la pestaña en la lista de pestañas
-	        
-	        // Contenido
+	        tabButton.textContent = acronimo;
+
+	        tabItem.appendChild(tabButton);
+	        tabContainer.appendChild(tabItem);
+
+	        // Crear contenido de la pestaña
 	        const tabPane = document.createElement("div");
 	        tabPane.className = "tab-pane fade" + (index === 0 ? " show active" : "");
-	        tabPane.id = `content-${asig.acronimo}`;
+	        tabPane.id = `content-${acronimo}`;
 	        tabPane.role = "tabpanel";
-	        tabPane.setAttribute("aria-labelledby", `tab-${asig.acronimo}`);
-	        tabPane.innerHTML = `
-	          <div class="alert alert-info">
-	            <h4>${asig.nombre}</h4>
-	            <p>Nota actual: <strong>${asig.nota || 'Sin calificar'}</strong></p>
-	          </div>
-	        `;
-	        
+	        tabPane.setAttribute("aria-labelledby", `tab-${acronimo}`);
+	        tabPane.innerHTML = `<div id="alumnos-${acronimo}"></div>`;
+
 	        contentContainer.appendChild(tabPane);
 	      });
+
+	      // Agregar evento para cargar alumnos al activar una pestaña
+	      const tabButtons = document.querySelectorAll('#asignaturas-tabs button');
+	      tabButtons.forEach(button => {
+	        button.addEventListener('shown.bs.tab', event => {
+	          const acronimo = event.target.textContent;
+	          const containerId = `alumnos-${acronimo}`;
+	          cargarAlumnos(acronimo, containerId);
+	        });
+	      });
+
+	      // Cargar alumnos de la primera pestaña por defecto
+	      if (data.asignaturas.length > 0) {
+	        const firstAcronimo = data.asignaturas[0].acronimo;
+	        const firstContainerId = `alumnos-${firstAcronimo}`;
+	        cargarAlumnos(firstAcronimo, firstContainerId);
+	      }
 	    })
-	    .catch(err => {    //por si aca
+	    .catch(err => {
 	      console.error("Error cargando asignaturas:", err);
 	      document.getElementById("asignaturas-content").innerHTML = `
 	        <div class="alert alert-danger">
@@ -117,6 +130,44 @@
 	      `;
 	    });
 	});
+
+	function cargarAlumnos(acronimo, containerId) {
+	  fetch("AsignaturaAlumnosServlet?acronimo=" + encodeURIComponent(acronimo))
+	    .then(res => res.json())
+	    .then(data => {
+	      const container = document.getElementById(containerId);
+
+	      let tabla = `
+	        <table class="table table-striped mt-3">
+	          <thead>
+	            <tr><th>DNI</th><th>Acciones</th></tr>
+	          </thead>
+	          <tbody>
+	      `;
+
+	      data.forEach(alumno => {
+	        tabla += `
+	          <tr>
+	            <td>${alumno.alumno}</td>
+	            <td><button class="btn btn-info btn-sm" onclick="verDetalleAlumno('${alumno.alumno}')">Ver Detalles</button></td>
+	          </tr>
+	        `;
+	      });
+
+	      tabla += "</tbody></table>";
+	      container.innerHTML = tabla;
+	    })
+	    .catch(err => {
+	      console.error("Error cargando alumnos:", err);
+	      const container = document.getElementById(containerId);
+	      container.innerHTML = `
+	        <div class="alert alert-danger mt-3">
+	          Error al cargar los alumnos. Inténtelo de nuevo más tarde.
+	        </div>
+	      `;
+	    });
+	}
+
   </script>
 </body>
 </html>
