@@ -49,9 +49,12 @@
               <!-- El contenido se generará dinámicamente con JavaScript -->
             </div>
 
-            <div class="mt-3">
-              <a href="login_alumno.html" class="btn btn-secondary">Cerrar Sesión</a>
-            </div>
+            <div class="mt-3 d-flex justify-content-between">
+  				<a href="login_alumno.html" class="btn btn-secondary">Cerrar Sesión</a>
+  				<form action="GenerarPDFServlet" method="get">
+   					<button type="submit" class="btn btn-primary">Exportar PDF</button>
+  				</form>
+			</div>
           </div>
         </div>
       </div>
