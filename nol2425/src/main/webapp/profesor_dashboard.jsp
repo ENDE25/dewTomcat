@@ -53,7 +53,7 @@
     </div>
   </main>
 
-  <!-- Pie de página -->
+  <!-- Pie de páginaa -->
   <footer class="py-3 mt-auto">
     <div class="container text-center">
       <small class="text-muted">Grupo G1: Ethan Arroyo, Feran Catalán, Pablo Rodríguez, Sergi Beneyto, Carles Hervás</small>

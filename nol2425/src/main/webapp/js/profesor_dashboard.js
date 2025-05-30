@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	      const tabContainer = document.getElementById("asignaturas-tabs");
 	      const contentContainer = document.getElementById("asignaturas-content");
 
-	      // Limpiar contenedores
+	      // Limpiar contenedoores
 	      tabContainer.innerHTML = '';
 	      contentContainer.innerHTML = '';
 
