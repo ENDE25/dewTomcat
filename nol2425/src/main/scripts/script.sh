@@ -103,3 +103,21 @@ for acronimo in "${acronimos[@]}"; do
             -d "$acronimo"
     done
 done
+
+
+
+dni_profesores=(222345666 333666333 444123444 555666555 666555666)
+
+for acronimo in "${acronimos[@]}"; do
+    echo "Añadiendo profesores a asignatura $acronimo..."
+
+    for dni in "${dni_profesores[@]}"; do
+        echo "  - Añadiendo profesor con DNI $dni a $acronimo..."
+
+        curl -s -b admin_cookie.txt \
+            -X POST "http://localhost:9090/CentroEducativo/profesores/$dni/asignaturas?key=$KEY" \
+            -H "accept: text/plain" \
+            -H "Content-Type: application/json" \
+            -d "$acronimo"
+    done
+done
