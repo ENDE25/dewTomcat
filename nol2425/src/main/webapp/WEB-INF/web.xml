@@ -70,6 +70,16 @@
 		<url-pattern>/AsignaturaAlumnosServlet</url-pattern>
 	</servlet-mapping>
 
+	<!--Asignatura Alumnos-->
+    <servlet>
+        <servlet-name>AlumnoDetalleServlet</servlet-name>
+        <servlet-class>servlets.AlumnoDetalleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AlumnoDetalleServlet</servlet-name>
+        <url-pattern>/AlumnoDetalleServlet</url-pattern>
+    </servlet-mapping>
+
 <!--Filtros-->
 	<!--Filtro de Logs-->
 	<context-param>

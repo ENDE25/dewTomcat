@@ -56,6 +56,42 @@ public class AsignaturaDetalleServlet extends HttpServlet {
             response.sendError(500, "Error al obtener detalles de la asignatura.");
             return;
         }
+        
+        String urlProfesor = "http://localhost:9090/CentroEducativo/asignaturas/" + acronimo + "/profesores?key=" + key;
+
+        String[] comandoProfesor = {
+            "curl",
+            "-X", "GET",
+            urlProfesor,
+            "-H", "accept: application/json",
+            "-H", "Cookie: " + cookie
+        };
+
+        StringBuilder jsonProfesor = new StringBuilder();
+
+        try {
+            ProcessBuilder pb2 = new ProcessBuilder(comandoProfesor);
+            Process proceso2 = pb2.start();
+
+            try (BufferedReader reader2 = new BufferedReader(new InputStreamReader(proceso2.getInputStream()))) {
+                String line;
+                while ((line = reader2.readLine()) != null) {
+                    jsonProfesor.append(line);
+                }
+            }
+
+            proceso2.waitFor();
+
+        } catch (Exception e) {
+            jsonProfesor.append("");
+        }
+        
+        String respuestaProfesor = jsonProfesor.toString();
+        String nombreProfe = extraerCampo(respuestaProfesor, "nombre");
+        String apellidosProfe = extraerCampo(respuestaProfesor, "apellidos");
+        String profesor = (!nombreProfe.equals("No disponible") && !apellidosProfe.equals("No disponible"))
+            ? nombreProfe + " " + apellidosProfe
+            : "Profesor no disponible";
 
         // Simulación simple: parseo manual de campos
         String respuesta = json.toString();
@@ -63,6 +99,7 @@ public class AsignaturaDetalleServlet extends HttpServlet {
         request.setAttribute("nombre", extraerCampo(respuesta, "nombre"));
         request.setAttribute("curso", extraerCampo(respuesta, "curso"));
         request.setAttribute("creditos", extraerCampo(respuesta, "creditos"));
+        request.setAttribute("profesor", profesor);
 
         request.getRequestDispatcher("detalle_asignatura.jsp").forward(request, response);
     }
