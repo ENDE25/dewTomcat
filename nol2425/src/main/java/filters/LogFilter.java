@@ -3,7 +3,6 @@ package filters;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.*;
 import java.time.LocalDateTime;
 
@@ -12,8 +11,7 @@ public class LogFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        ServletContext context = config.getServletContext();
-        logPath = context.getInitParameter("logFilePath");
+        logPath = config.getServletContext().getInitParameter("logFilePath");
         if (logPath == null || logPath.isEmpty()) {
             throw new ServletException("No se ha definido 'logFilePath' en web.xml");
         }
@@ -27,32 +25,44 @@ public class LogFilter implements Filter {
         HttpSession session = httpRequest.getSession(false);
 
         String usuario = "anonimo";
+        String tipoUsuario = "desconocido";
 
-        if (session != null &&
-            session.getAttribute("dni") != null &&
-            session.getAttribute("key") != null &&
-            session.getAttribute("cookieCentro") != null) {
+        if (session != null && session.getAttribute("dni") != null
+                && session.getAttribute("key") != null
+                && session.getAttribute("cookieCentro") != null) {
 
             String dni = (String) session.getAttribute("dni");
             String key = (String) session.getAttribute("key");
             String cookie = (String) session.getAttribute("cookieCentro");
 
-            String url = "http://localhost:9090/CentroEducativo/alumnos/" + dni + "?key=" + key;
+            // Determinar si es profesor o alumno por la ruta de acceso
+            String requestURI = httpRequest.getRequestURI();
+            boolean esProfesor = requestURI.contains("profesor");
 
-            String[] command = {
-                "curl",
-                "-X", "GET",
-                url,
-                "-H", "accept: application/json",
-                "-H", "Cookie: " + cookie
-            };
-
-            StringBuilder jsonResult = new StringBuilder();
             try {
+                String url;
+                if (esProfesor) {
+                    url = "http://localhost:9090/CentroEducativo/profesores/" + dni + "?key=" + key;
+                    tipoUsuario = "profesor";
+                } else {
+                    url = "http://localhost:9090/CentroEducativo/alumnos/" + dni + "?key=" + key;
+                    tipoUsuario = "alumno";
+                }
+
+                String[] command = {
+                    "curl",
+                    "-X", "GET",
+                    url,
+                    "-H", "accept: application/json",
+                    "-H", "Cookie: " + cookie
+                };
+
+                StringBuilder jsonResult = new StringBuilder();
                 ProcessBuilder pb = new ProcessBuilder(command);
                 Process process = pb.start();
 
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         jsonResult.append(line);
@@ -62,6 +72,7 @@ public class LogFilter implements Filter {
                 process.waitFor();
                 String json = jsonResult.toString();
 
+                // Extraer nombre (funciona para ambos JSONs)
                 int nombreIndex = json.indexOf("\"nombre\":\"");
                 if (nombreIndex != -1) {
                     int start = nombreIndex + 10;
@@ -69,22 +80,26 @@ public class LogFilter implements Filter {
                     if (end > start) {
                         String nombre = json.substring(start, end);
                         usuario = nombre;
-                        
-                        
-                        //añadido por pablo
-                        session.setAttribute("nombreAlumno", nombre);
+                       
+                        // Guardar en sesión con atributo específico
+                        if (esProfesor) {
+                            session.setAttribute("nombreProfesor", nombre);
+                        } else {
+                            session.setAttribute("nombreAlumno", nombre);
+                        }
                     }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        // Log (ahora incluye tipo de usuario)
         String ip = request.getRemoteAddr();
         String uri = httpRequest.getRequestURI();
         String metodo = httpRequest.getMethod();
-        String log = String.format("%s %s %s %s %s%n", LocalDateTime.now(), usuario, ip, uri, metodo);
+        String log = String.format("%s [%s] %s %s %s %s%n",
+                LocalDateTime.now(), tipoUsuario, usuario, ip, uri, metodo);
 
         synchronized (this) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(logPath, true))) {
@@ -98,4 +113,3 @@ public class LogFilter implements Filter {
     @Override
     public void destroy() {}
 }
-

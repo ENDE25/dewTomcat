@@ -6,7 +6,7 @@
         return;
     }
     String dni = (String) sesion.getAttribute("dni");
-    String nombreProfesor = (String) sesion.getAttribute("nombreAlumno");
+    String nombreProfesor = (String) sesion.getAttribute("nombreProfesor");
 %>
 
 <!DOCTYPE html>
