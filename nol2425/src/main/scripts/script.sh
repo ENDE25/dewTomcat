@@ -121,3 +121,18 @@ for acronimo in "${acronimos[@]}"; do
             -d "$acronimo"
     done
 done
+
+
+for acronimo in "${acronimos[@]}"; do
+    echo "Añadiendo notas alumnos a asignatura $acronimo..."
+
+    for dni in "${dni_alumnos[@]}"; do
+        echo "  - Añadiendo nota a alumno con DNI $dni a $acronimo..."
+
+        curl -s -b admin_cookie.txt \
+            -X PUT "http://localhost:9090/CentroEducativo/alumnos/$dni/asignaturas/$acronimo?key=$KEY" \
+            -H "accept: text/plain" \
+            -H "Content-Type: application/json" \
+            -d "5"
+    done
+done
