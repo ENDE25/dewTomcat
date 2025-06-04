@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	          <tr>
 	            <td>${alumnoObj.alumno}</td>
 	            <td>
-	              <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse"
+	              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
 	                data-bs-target="#${detalleId}" aria-expanded="false" aria-controls="${detalleId}"
 	                onclick="verDetalleAlumno('${alumnoObj.alumno}', '${acronimo}', this)">Mostrar Detalles</button>
 	            </td>

@@ -61,6 +61,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="js/profesor_dashboard.js"></script>
+  <script src="js/profesor_dashboard.js?v=<?= time(); ?>"></script>
 </body>
 </html>
