@@ -5,8 +5,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlumnoDetalleServlet extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -26,12 +29,46 @@ public class AlumnoDetalleServlet extends HttpServlet {
         String key = (String) session.getAttribute("key");
         String cookie = (String) session.getAttribute("cookieCentro");
 
-        String url = "http://localhost:9090/CentroEducativo/alumnos/" + dniAlumno + "?key=" + key;
+        // --- PRIMERA PETICIÓN: Datos del alumno ---
+        String alumnoJson = ejecutarCurl("http://localhost:9090/CentroEducativo/alumnos/" + dniAlumno + "?key=" + key, cookie);
 
+        if (alumnoJson == null) {
+            response.sendError(500, "Error obteniendo datos del alumno");
+            return;
+        }
+
+        // --- SEGUNDA PETICIÓN: Asignaturas del alumno ---
+        String asignaturasJson = ejecutarCurl("http://localhost:9090/CentroEducativo/alumnos/" + dniAlumno + "/asignaturas?key=" + key, cookie);
+
+        List<String> asignaturas = new ArrayList<>();
+        if (asignaturasJson != null && asignaturasJson.startsWith("[")) {
+            // Separar manualmente los acrónimos de asignaturas del JSON plano
+            asignaturasJson = asignaturasJson.substring(1, asignaturasJson.length() - 1); // quitar [ ]
+            String[] objetos = asignaturasJson.split("\\},\\{");
+
+            for (String obj : objetos) {
+                obj = obj.replace("{", "").replace("}", ""); // limpiar
+                String[] campos = obj.split(",");
+                for (String campo : campos) {
+                    if (campo.contains("\"asignatura\"")) {
+                        String valor = campo.split(":")[1].replaceAll("\"", "").trim();
+                        asignaturas.add(valor);
+                    }
+                }
+            }
+        }
+
+        request.setAttribute("dni", dniAlumno);
+        request.setAttribute("nombre", extraerCampo(alumnoJson, "nombre"));
+        request.setAttribute("apellidos", extraerCampo(alumnoJson, "apellidos"));
+        request.setAttribute("asignaturas", asignaturas);
+
+        request.getRequestDispatcher("detalle_alumno.jsp").forward(request, response);
+    }
+
+    private String ejecutarCurl(String url, String cookie) {
         String[] command = {
-            "curl",
-            "-X", "GET",
-            url,
+            "curl", "-X", "GET", url,
             "-H", "accept: application/json",
             "-H", "Cookie: " + cookie
         };
@@ -41,28 +78,20 @@ public class AlumnoDetalleServlet extends HttpServlet {
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
             Process process = pb.start();
-
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     resultado.append(line);
                 }
             }
-
-            process.waitFor();
-
+            int exitCode = process.waitFor();
+            if (exitCode != 0) return null;
         } catch (Exception e) {
-            response.sendError(500, "Error al obtener detalles del alumno.");
-            return;
+            e.printStackTrace();
+            return null;
         }
 
-        String json = resultado.toString();
-        request.setAttribute("dni", dniAlumno);
-        request.setAttribute("nombre", extraerCampo(json, "nombre"));
-        request.setAttribute("apellidos", extraerCampo(json, "apellidos"));
-        request.setAttribute("correo", extraerCampo(json, "correo"));
-
-        request.getRequestDispatcher("detalle_alumno.jsp").forward(request, response);
+        return resultado.toString();
     }
 
     private String extraerCampo(String json, String campo) {

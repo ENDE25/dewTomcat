@@ -82,27 +82,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	      `;
 
 	      data.forEach(alumnoObj => {
-			tabla += `
-			  <tr>
-			    <td>${alumnoObj.alumno}</td>
-			    <td>
-			      <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse"
-			        data-bs-target="#detalle-${alumnoObj.alumno}"
-			        onclick="verDetalleAlumno('${alumnoObj.alumno}')">Ver Detalles</button>
-			    </td>
-			  </tr>
-			  <tr>
-			    <td colspan="2">
-			      <div class="collapse" id="detalle-${alumnoObj.alumno}">
-			        <div class="card card-body" id="contenido-detalle-${alumnoObj.alumno}">
-			          <div class="text-muted">Cargando...</div>
-			        </div>
-			      </div>
-			    </td>
-			  </tr>
-			`;
-
-
+	        const detalleId = `detalle-${alumnoObj.alumno}-${acronimo}`;
+	        const contenidoDetalleId = `contenido-detalle-${alumnoObj.alumno}-${acronimo}`;
+	        tabla += `
+	          <tr>
+	            <td>${alumnoObj.alumno}</td>
+	            <td>
+	              <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse"
+	                data-bs-target="#${detalleId}" aria-expanded="false" aria-controls="${detalleId}"
+	                onclick="verDetalleAlumno('${alumnoObj.alumno}', '${acronimo}', this)">Mostrar Detalles</button>
+	            </td>
+	          </tr>
+	          <tr>
+	            <td colspan="2">
+	              <div class="collapse" id="${detalleId}">
+	                <div class="card card-body" id="${contenidoDetalleId}">
+	                  <div class="text-muted">Cargando...</div>
+	                </div>
+	              </div>
+	            </td>
+	          </tr>
+	        `;
 	      });
 
 	      tabla += "</tbody></table>";
@@ -119,22 +119,34 @@ document.addEventListener("DOMContentLoaded", () => {
 	    });
 	}
 	
-	function verDetalleAlumno(dni) {
-	  const contenedor = document.getElementById(`contenido-detalle-${dni}`);
-	  if (contenedor.dataset.cargado === "true") return;
+	function verDetalleAlumno(dni, acronimo, boton) {
+	  const contenedor = document.getElementById(`contenido-detalle-${dni}-${acronimo}`);
+	  const collapseDiv = document.getElementById(`detalle-${dni}-${acronimo}`);
 
-	  fetch(`AlumnoDetalleServlet?dni=${encodeURIComponent(dni)}`)
-	    .then(res => {
-	      if (!res.ok) throw new Error("Error cargando detalles");
-	      return res.text();
-	    })
-	    .then(html => {
-	      contenedor.innerHTML = html;
-	      contenedor.dataset.cargado = "true";
-	    })
-	    .catch(err => {
-	      contenedor.innerHTML = `<div class="text-danger">Error al cargar los detalles.</div>`;
-	    });
+	  // Verificar si el contenido ya ha sido cargado
+	  if (!contenedor.dataset.cargado) {
+	    fetch(`AlumnoDetalleServlet?dni=${encodeURIComponent(dni)}`)
+	      .then(res => {
+	        if (!res.ok) throw new Error("Error cargando detalles");
+	        return res.text();
+	      })
+	      .then(html => {
+	        contenedor.innerHTML = html;
+	        contenedor.dataset.cargado = "true";
+	      })
+	      .catch(err => {
+	        contenedor.innerHTML = `<div class="text-danger">Error al cargar los detalles.</div>`;
+	      });
+	  }
+
+	  // Cambiar el texto del botón según el estado del colapso
+	  collapseDiv.addEventListener('shown.bs.collapse', () => {
+	    boton.textContent = 'Ocultar Detalles';
+	  });
+	  collapseDiv.addEventListener('hidden.bs.collapse', () => {
+	    boton.textContent = 'Mostrar Detalles';
+	  });
 	}
+
 
 
