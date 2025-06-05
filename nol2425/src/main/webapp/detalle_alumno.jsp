@@ -12,7 +12,7 @@
 
     <div class="row mt-3">
         <div class="col-md-3 text-center">
-            <img src="fotos/<%= dni %>.jpg" alt="Foto de <%= nombre %>" class="img-fluid rounded">
+            <img src="img/<%= dni %>.png" alt="Foto de <%= nombre %>" class="img-fluid rounded">
         </div>
         <div class="col-md-9">
             <p><strong>[Matriculad@ en:</strong>
