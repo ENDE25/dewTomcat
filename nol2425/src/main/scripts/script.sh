@@ -122,6 +122,15 @@ for acronimo in "${acronimos[@]}"; do
     done
 done
 
+echo " Haciendo login como profesor..."
+
+KEYP=$(curl -s -c profesor_cookie.txt \
+    -X POST "http://localhost:9090/CentroEducativo/login" \
+    -H "accept: text/plain" \
+    -H "Content-Type: application/json" \
+    -d '{ "dni": "222345666", "password": "123456" }' | tr -d '"')
+    
+echo " Key obtenida: $KEYP"
 
 for acronimo in "${acronimos[@]}"; do
     echo "Añadiendo notas alumnos a asignatura $acronimo..."
@@ -129,8 +138,8 @@ for acronimo in "${acronimos[@]}"; do
     for dni in "${dni_alumnos[@]}"; do
         echo "  - Añadiendo nota a alumno con DNI $dni a $acronimo..."
 
-        curl -s -b admin_cookie.txt \
-            -X PUT "http://localhost:9090/CentroEducativo/alumnos/$dni/asignaturas/$acronimo?key=$KEY" \
+        curl -s -b profesor_cookie.txt \
+            -X PUT "http://localhost:9090/CentroEducativo/alumnos/$dni/asignaturas/$acronimo?key=$KEYP" \
             -H "accept: text/plain" \
             -H "Content-Type: application/json" \
             -d "5"
