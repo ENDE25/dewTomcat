@@ -9,6 +9,19 @@
     String nombreAlumno = (String) sesion.getAttribute("nombreAlumno");
 %>
 
+<%
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    HttpSession cSesion = request.getSession(false);
+    if (sesion == null || sesion.getAttribute("key") == null) {
+        response.sendRedirect("login_alumno.html");
+        return;
+    }
+%>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,7 +63,7 @@
             </div>
 
             <div class="mt-3 d-flex justify-content-between">
-  				<a href="login_alumno.html" class="btn btn-secondary">Cerrar Sesión</a>
+  				<a href="LogoutServlet" class="btn btn-secondary">Cerrar Sesión</a>
   				<form action="GenerarPDFServlet" method="get">
    					<button type="submit" class="btn btn-primary">Exportar PDF</button>
   				</form>
@@ -67,6 +80,9 @@
       <small class="text-muted">Grupo G1: Ethan Arroyo, Feran Catalán, Pablo Rodríguez, Sergi Beneyto, Carles Hervás</small>
     </div>
   </footer>
+  
+ 
+  
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/alumno_dashboard.js"></script>

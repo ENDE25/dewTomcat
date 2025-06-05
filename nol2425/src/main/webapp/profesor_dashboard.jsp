@@ -9,6 +9,19 @@
     String nombreProfesor = (String) sesion.getAttribute("nombreProfesor");
 %>
 
+<%
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    HttpSession cSesion = request.getSession(false);
+    if (sesion == null || sesion.getAttribute("key") == null) {
+        response.sendRedirect("login_alumno.html");
+        return;
+    }
+%>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -45,7 +58,7 @@
               <!-- Contenido generado por JS -->
             </div>
             <div class="mt-3">
-              <a href="login_profesor.html" class="btn btn-secondary">Cerrar Sesión</a>
+              <a href="LogoutProfesorServlet" class="btn btn-secondary">Cerrar Sesión</a>
             </div>
           </div>
         </div>
