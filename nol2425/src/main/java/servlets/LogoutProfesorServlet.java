@@ -24,6 +24,6 @@ public class LogoutProfesorServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
 
-        response.sendRedirect("login_profesor.html");
+        response.sendRedirect("index.html");
     }
 }

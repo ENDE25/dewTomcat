@@ -16,7 +16,7 @@
 
     HttpSession cSesion = request.getSession(false);
     if (sesion == null || sesion.getAttribute("key") == null) {
-        response.sendRedirect("login_alumno.html");
+        response.sendRedirect("index.html");
         return;
     }
 %>
