@@ -1,7 +1,7 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%
     HttpSession sesion = request.getSession(false);
-    if (sesion == null || sesion.getAttribute("key") == null || !"rolalu".equals(sesion.getAttribute("rol"))) {
+    if (sesion == null || sesion.getAttribute("key") == null || !"rolpro".equals(sesion.getAttribute("rol"))) {
         response.sendRedirect("login_profesor.html");
         return;
     }
