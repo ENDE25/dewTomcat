@@ -57,9 +57,10 @@
             <div class="tab-content" id="asignaturas-content">
               <!-- Contenido generado por JS -->
             </div>
-            <div class="mt-3">
-              <a href="LogoutProfesorServlet" class="btn btn-secondary">Cerrar Sesión</a>
-            </div>
+            <div class="mt-3 d-flex justify-content-between align-items-center">
+  				<a href="LogoutProfesorServlet" class="btn btn-secondary">Cerrar Sesión</a>
+  				<button id="btn-media" class="btn btn-primary">Media</button>
+			</div>
           </div>
         </div>
       </div>

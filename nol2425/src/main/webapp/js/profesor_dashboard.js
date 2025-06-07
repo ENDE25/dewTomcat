@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	        </div>
 	      `;
 	    });
+		document.getElementById("btn-media").addEventListener("click", calcularMedia);
 	});
 
 	function cargarAlumnos(acronimo, containerId) {
@@ -148,5 +149,45 @@ document.addEventListener("DOMContentLoaded", () => {
 	  });
 	}
 
+	function calcularMedia() {
+	  const activeTab = document.querySelector('.nav-link.active');
+	  if (!activeTab) return;
+
+	  const acronimo = activeTab.textContent;
+	  const containerId = `alumnos-${acronimo}`;
+	  const mediaId = `media-${acronimo}`;
+
+	  // Evitar duplicados: si ya existe, lo eliminamos
+	  const viejo = document.getElementById(mediaId);
+	  if (viejo) viejo.remove();
+
+	  fetch("AsignaturaAlumnosServlet?acronimo=" + encodeURIComponent(acronimo))
+	    .then(res => res.json())
+	    .then(data => {
+	      const notas = data.map(a => parseFloat(a.nota)).filter(n => !isNaN(n));
+	      const contenedor = document.getElementById(containerId);
+
+	      const div = document.createElement("div");
+	      div.className = "alert alert-info mt-3";
+	      div.id = mediaId;
+
+	      if (notas.length === 0) {
+	        div.textContent = "No hay notas disponibles para esta asignatura.";
+	      } else {
+	        const media = notas.reduce((acc, n) => acc + n, 0) / notas.length;
+	        div.textContent = `Media de la asignatura ${acronimo}: ${media.toFixed(2)}`;
+	      }
+
+	      contenedor.appendChild(div);
+	    })
+	    .catch(err => {
+	      console.error("Error calculando media:", err);
+	      const contenedor = document.getElementById(containerId);
+	      const div = document.createElement("div");
+	      div.className = "alert alert-danger mt-3";
+	      div.textContent = "Error al calcular la media.";
+	      contenedor.appendChild(div);
+	    });
+	}
 
 

@@ -137,11 +137,21 @@ for acronimo in "${acronimos[@]}"; do
 
     for dni in "${dni_alumnos[@]}"; do
         echo "  - Añadiendo nota a alumno con DNI $dni a $acronimo..."
-
         curl -s -b profesor_cookie.txt \
             -X PUT "http://localhost:9090/CentroEducativo/alumnos/$dni/asignaturas/$acronimo?key=$KEYP" \
             -H "accept: text/plain" \
             -H "Content-Type: application/json" \
             -d "5"
     done
+done
+
+echo "Sobrescribiendo nota del alumno 222222222 a 8 en todas sus asignaturas..."
+
+for acronimo in "${acronimos[@]}"; do
+    echo "  - Cambiando nota a 8 en $acronimo"
+    curl -s -b profesor_cookie.txt \
+        -X PUT "http://localhost:9090/CentroEducativo/alumnos/222222222/asignaturas/$acronimo?key=$KEYP" \
+        -H "accept: text/plain" \
+        -H "Content-Type: application/json" \
+        -d "8"
 done
