@@ -20,6 +20,17 @@ public class ProfesorDashboardServlet extends HttpServlet {
         }
 
         String dni = (String) session.getAttribute("dni");
+        String usuario = request.getRemoteUser();
+        if (usuario != null && !usuario.equals(dni)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso no autorizado.");
+            return;
+        }
+        
+        if (session == null || !"rolpro".equals(session.getAttribute("rol"))) {
+            response.sendRedirect("login_profesor.html?error=rol");
+            return;
+        }
+        
         String key = (String) session.getAttribute("key");
         String cookie = (String) session.getAttribute("cookieCentro");
 

@@ -20,6 +20,12 @@ public class AlumnoDashboardServlet extends HttpServlet {
         }
 
         String dni = (String) session.getAttribute("dni");
+        
+        if (session == null || !"rolalu".equals(session.getAttribute("rol"))) {
+            response.sendRedirect("login_alumno.html?error=rol");
+            return;
+        }
+        
         String key = (String) session.getAttribute("key");
         String cookie = (String) session.getAttribute("cookieCentro");
         

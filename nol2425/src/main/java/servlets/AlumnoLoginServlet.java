@@ -69,6 +69,8 @@ public class AlumnoLoginServlet extends HttpServlet {
         session.setAttribute("key", key);
         session.setAttribute("cookieCentro", cookie);
         session.setAttribute("rol", "rolalu");
+        
+        
 
         response.sendRedirect("alumno_dashboard.jsp");
     }

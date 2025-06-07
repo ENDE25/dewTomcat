@@ -71,6 +71,8 @@ public class ProfesorLoginServlet extends HttpServlet {
         session.setAttribute("rol", "rolpro");
         session.setAttribute("nombreProfesor", dni); // Puedes ajustar esto si tienes el nombre real
 
+        
+        
         response.sendRedirect("profesor_dashboard.jsp");
     }
 
