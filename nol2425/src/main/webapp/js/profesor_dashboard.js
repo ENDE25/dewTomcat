@@ -124,9 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	  const contenedor = document.getElementById(`contenido-detalle-${dni}-${acronimo}`);
 	  const collapseDiv = document.getElementById(`detalle-${dni}-${acronimo}`);
 
-	  // Verificar si el contenido ya ha sido cargado
 	  if (!contenedor.dataset.cargado) {
-	    fetch(`AlumnoDetalleServlet?dni=${encodeURIComponent(dni)}`)
+		fetch(`AlumnoDetalleServlet?dni=${encodeURIComponent(dni)}&acronimo=${encodeURIComponent(acronimo)}`)
 	      .then(res => {
 	        if (!res.ok) throw new Error("Error cargando detalles");
 	        return res.text();
@@ -140,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	      });
 	  }
 
-	  // Cambiar el texto del botón según el estado del colapso
 	  collapseDiv.addEventListener('shown.bs.collapse', () => {
 	    boton.textContent = 'Ocultar Detalles';
 	  });
@@ -190,4 +188,31 @@ document.addEventListener("DOMContentLoaded", () => {
 	    });
 	}
 
+	function cambiarNota(dni, acronimo) {
+	  const input = document.getElementById(`input-nota-${dni}-${acronimo}`);
+	  const nuevaNota = input.value.trim();
 
+	  if (nuevaNota === "" || isNaN(nuevaNota) || nuevaNota < 0 || nuevaNota > 10) {
+	    alert("Introduce una nota válida entre 0 y 10.");
+	    return;
+	  }
+
+	  fetch("ActualizarNotaServlet", {
+	    method: "PUT",
+	    headers: { "Content-Type": "application/json" },
+	    body: JSON.stringify({ dni, acronimo, nota: nuevaNota })
+	  })
+	  .then(res => {
+	    if (!res.ok) throw new Error("Error en la actualización");
+	    return res.text();
+	  })
+	  .then(msg => {
+	    document.getElementById(`nota-valor-${dni}-${acronimo}`).textContent = nuevaNota;
+	    input.value = ""; // Vaciar el input tras actualizar
+	    alert("Nota actualizada correctamente");
+	  })
+	  .catch(err => {
+	    console.error(err);
+	    alert("No se pudo actualizar la nota.");
+	  });
+	}

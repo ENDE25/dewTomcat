@@ -21,6 +21,9 @@ public class AlumnoDetalleServlet extends HttpServlet {
         }
 
         String dniAlumno = request.getParameter("dni");
+        String acronimo = request.getParameter("acronimo");
+        request.setAttribute("acronimo", acronimo);
+
         if (dniAlumno == null || dniAlumno.isEmpty()) {
             response.sendError(400, "Falta el DNI del alumno.");
             return;
@@ -31,7 +34,6 @@ public class AlumnoDetalleServlet extends HttpServlet {
 
         // --- PRIMERA PETICIÓN: Datos del alumno ---
         String alumnoJson = ejecutarCurl("http://localhost:9090/CentroEducativo/alumnos/" + dniAlumno + "?key=" + key, cookie);
-
         if (alumnoJson == null) {
             response.sendError(500, "Error obteniendo datos del alumno");
             return;
@@ -41,10 +43,11 @@ public class AlumnoDetalleServlet extends HttpServlet {
         String asignaturasJson = ejecutarCurl("http://localhost:9090/CentroEducativo/alumnos/" + dniAlumno + "/asignaturas?key=" + key, cookie);
 
         List<String> asignaturas = new ArrayList<>();
+        String[] objetos = new String[0];  // <- Declaramos aquí
+
         if (asignaturasJson != null && asignaturasJson.startsWith("[")) {
-            // Separar manualmente los acrónimos de asignaturas del JSON plano
             asignaturasJson = asignaturasJson.substring(1, asignaturasJson.length() - 1); // quitar [ ]
-            String[] objetos = asignaturasJson.split("\\},\\{");
+            objetos = asignaturasJson.split("\\},\\{");
 
             for (String obj : objetos) {
                 obj = obj.replace("{", "").replace("}", ""); // limpiar
@@ -63,6 +66,32 @@ public class AlumnoDetalleServlet extends HttpServlet {
         request.setAttribute("apellidos", extraerCampo(alumnoJson, "apellidos"));
         request.setAttribute("asignaturas", asignaturas);
 
+        // --- Buscar nota del alumno para la asignatura ---
+        String nota = "No disponible";
+        if (acronimo != null && !acronimo.isEmpty()) {
+            for (String obj : objetos) {
+                obj = obj.replace("{", "").replace("}", "");
+                String[] campos = obj.split(",");
+                String asignaturaEncontrada = null;
+                String notaEncontrada = null;
+
+                for (String campo : campos) {
+                    if (campo.contains("\"asignatura\"")) {
+                        asignaturaEncontrada = campo.split(":")[1].replaceAll("\"", "").trim();
+                    }
+                    if (campo.contains("\"nota\"")) {
+                        notaEncontrada = campo.split(":")[1].replaceAll("\"", "").trim();
+                    }
+                }
+
+                if (asignaturaEncontrada != null && asignaturaEncontrada.equals(acronimo)) {
+                    nota = notaEncontrada != null ? notaEncontrada : "No disponible";
+                    break;
+                }
+            }
+        }
+
+        request.setAttribute("nota", nota);
         request.getRequestDispatcher("detalle_alumno.jsp").forward(request, response);
     }
 
@@ -74,7 +103,6 @@ public class AlumnoDetalleServlet extends HttpServlet {
         };
 
         StringBuilder resultado = new StringBuilder();
-
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
             Process process = pb.start();
