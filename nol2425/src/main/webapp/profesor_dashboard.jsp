@@ -53,13 +53,13 @@
             </ul>
           </div>
           <div class="card-body">
-            <h5 class="card-title">Bienvenido, <%= nombreProfesor != null ? nombreProfesor : dni %></h5>
+            <h5 class="card-title">Bienvenid@, <%= nombreProfesor != null ? nombreProfesor : dni %></h5>
             <div class="tab-content" id="asignaturas-content">
               <!-- Contenido generado por JS -->
             </div>
             <div class="mt-3 d-flex justify-content-between align-items-center">
   				<a href="LogoutProfesorServlet" class="btn btn-secondary">Cerrar Sesión</a>
-  				<button id="btn-media" class="btn btn-primary">Media</button>
+  				<button id="btn-media" class="btn btn-primary">Calcular Media</button>
 			</div>
           </div>
         </div>

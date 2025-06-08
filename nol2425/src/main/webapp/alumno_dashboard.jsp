@@ -55,7 +55,7 @@
           </div>
           
           <div class="card-body">
-            <h5 class="card-title">Bienvenido, <%= nombreAlumno != null ? nombreAlumno : dni %></h5>
+            <h5 class="card-title">Bienvenid@, <%= nombreAlumno != null ? nombreAlumno : dni %></h5>
             
             <!-- Contenido de las pestañas -->
             <div class="tab-content" id="asignaturas-content">

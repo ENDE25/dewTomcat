@@ -47,8 +47,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	          const acronimo = event.target.textContent;
 	          const containerId = `alumnos-${acronimo}`;
 	          cargarAlumnos(acronimo, containerId);
-	        });
-	      });
+	        
+	      
+		  
+		  // Restaurar el texto del botón de media si cambia de pestaña
+		  	const botonMedia = document.getElementById("btn-media");
+		    if (botonMedia) {
+		      botonMedia.textContent = "Calcular Media";
+		    }
+			});
+		  });
+		  
 
 	      // Cargar alumnos de la primera pestaña por defecto
 	      if (data.asignaturas.length > 0) {
@@ -77,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	      let tabla = `
 	        <table class="table table-striped mt-3">
 	          <thead>
-	            <tr><th>DNI</th><th>Acciones</th></tr>
+	            <tr><th>DNI</th><th class="text-end">Acciones</th></tr>
 	          </thead>
 	          <tbody>
 	      `;
@@ -86,10 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	        const detalleId = `detalle-${alumnoObj.alumno}-${acronimo}`;
 	        const contenidoDetalleId = `contenido-detalle-${alumnoObj.alumno}-${acronimo}`;
 	        tabla += `
-	          <tr>
+	          <tr class="alert alert-info mt-3">
 	            <td>${alumnoObj.alumno}</td>
-	            <td>
-	              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+	            <td class="text-end">
+	              <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse"
 	                data-bs-target="#${detalleId}" aria-expanded="false" aria-controls="${detalleId}"
 	                onclick="verDetalleAlumno('${alumnoObj.alumno}', '${acronimo}', this)">Mostrar Detalles</button>
 	            </td>
@@ -154,16 +163,21 @@ document.addEventListener("DOMContentLoaded", () => {
 	  const acronimo = activeTab.textContent;
 	  const containerId = `alumnos-${acronimo}`;
 	  const mediaId = `media-${acronimo}`;
+	  const contenedor = document.getElementById(containerId);
+	  const boton = document.getElementById("btn-media");
 
-	  // Evitar duplicados: si ya existe, lo eliminamos
 	  const viejo = document.getElementById(mediaId);
-	  if (viejo) viejo.remove();
+
+	  if (viejo) {
+	    viejo.remove();
+	    boton.textContent = "Calcular Media";
+	    return;
+	  }
 
 	  fetch("AsignaturaAlumnosServlet?acronimo=" + encodeURIComponent(acronimo))
 	    .then(res => res.json())
 	    .then(data => {
 	      const notas = data.map(a => parseFloat(a.nota)).filter(n => !isNaN(n));
-	      const contenedor = document.getElementById(containerId);
 
 	      const div = document.createElement("div");
 	      div.className = "alert alert-info mt-3";
@@ -177,16 +191,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	      }
 
 	      contenedor.appendChild(div);
+	      boton.textContent = "Ocultar Media";
 	    })
 	    .catch(err => {
 	      console.error("Error calculando media:", err);
-	      const contenedor = document.getElementById(containerId);
 	      const div = document.createElement("div");
 	      div.className = "alert alert-danger mt-3";
 	      div.textContent = "Error al calcular la media.";
 	      contenedor.appendChild(div);
 	    });
 	}
+
 
 	function cambiarNota(dni, acronimo) {
 	  const input = document.getElementById(`input-nota-${dni}-${acronimo}`);
